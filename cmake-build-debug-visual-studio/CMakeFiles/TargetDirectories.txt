@@ -1,0 +1,3 @@
+C:/Users/79933/Documents/GitHub/ServerDevice.FlexRay/cmake-build-debug-visual-studio/CMakeFiles/MTestServer.Device.FlexRay.dir
+C:/Users/79933/Documents/GitHub/ServerDevice.FlexRay/cmake-build-debug-visual-studio/CMakeFiles/edit_cache.dir
+C:/Users/79933/Documents/GitHub/ServerDevice.FlexRay/cmake-build-debug-visual-studio/CMakeFiles/rebuild_cache.dir
