@@ -35,7 +35,7 @@ struct ClusterConfig{
     double SampleClockPeriod;
     uint16_t StaticSlot;
     uint8_t SymbolWindow;
-    uint16_t T_S_S_TRANSMITTER;
+    uint16_t TimeSymbolStateTransmitter;
 
     uint8_t WakeUpSymbolRXIdle;
     uint8_t WakeUpSymbolRXLow;

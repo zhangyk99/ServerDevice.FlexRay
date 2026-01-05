@@ -194,11 +194,11 @@ namespace FlexRay {
         }
         cluster.SymbolWindow = json["SymbolWindow"].GetUint();
 
-        if (!json.HasMember("T_S_S_TRANSMITTER") || !json["T_S_S_TRANSMITTER"].IsUint()) {
-            errorString = "Missing or invalid cluster config T_S_S_TRANSMITTER";
+        if (!json.HasMember("TimeSymbolStateTransmitter") || !json["TimeSymbolStateTransmitter"].IsUint()) {
+            errorString = "Missing or invalid cluster config TimeSymbolStateTransmitter";
             return false;
         }
-        cluster.T_S_S_TRANSMITTER = json["T_S_S_TRANSMITTER"].GetUint();
+        cluster.TimeSymbolStateTransmitter = json["TimeSymbolStateTransmitter"].GetUint();
 
         if (!json.HasMember("WakeUpSymbolRXIdle") || !json["WakeUpSymbolRXIdle"].IsUint()) {
             errorString = "Missing or invalid cluster config WakeUpSymbolRXIdle";
