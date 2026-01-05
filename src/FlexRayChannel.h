@@ -31,7 +31,7 @@ namespace FlexRay {
     private:
         void *con;
         void *channelPtr;
-        std::shared_ptr<FlexRayConfig::ECU> channelConfig;
+        std::shared_ptr<FlexRayConfig::Channel> channelConfig;
         std::vector<int> frameList; //message Config
         int32_t errorCode;
 
@@ -48,7 +48,7 @@ namespace FlexRay {
         uint32_t timePos = 1;
 
     public:
-        explicit FlexRayChannel(void *con, char *deviceString, ClusterConfig *clusterConfig, FlexRayConfig::ECU *ecuConfig);
+        explicit FlexRayChannel(void *con, char *deviceString, ClusterConfig *clusterConfig, FlexRayConfig::Channel *ecuConfig);
 
         ~FlexRayChannel();
 

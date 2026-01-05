@@ -76,28 +76,28 @@ namespace FlexRay {
         }
 
 //        if (!json.HasMember("EcuList") || !json["EcuList"].IsArray()) {
-//            errorString = "Missing or invalid device config ECU List";
+//            errorString = "Missing or invalid device config Channel List";
 //            return false;
 //        }
 //        const rapidjson::Value &ecuList = json["EcuList"];
 //        for (rapidjson::SizeType i = 0; i < ecuList.Size(); i++) {
-//            ECU ecu;
-//            if (!ParseECU(ecuList[i], ecu)) {
-//                errorString += "Failed to parse ECU";
+//            Channel ecu;
+//            if (!ParseChannel(ecuList[i], ecu)) {
+//                errorString += "Failed to parse Channel";
 //                return false;
 //            }
 //            if (i == 0)
-//                config.Ecu = ecu;
+//                config.Chn = ecu;
 //            config.EcuList.push_back(ecu);
 //        }
 
 
-        if(!json.HasMember("Ecu") || json["Ecu"].IsObject()) {
-            errorString = "Missing or invalid device config Ecu";
+        if(!json.HasMember("Chn") || json["Chn"].IsObject()) {
+            errorString = "Missing or invalid device config Chn";
             return false;
         }
-        if (!ParseECU(json["Ecu"], config.Ecu)) {
-            errorString += "Failed to parse ECU";
+        if (!ParseChannel(json["Chn"], config.Chn)) {
+            errorString += "Failed to parse Channel";
             return false;
         }
 
@@ -404,66 +404,66 @@ namespace FlexRay {
         return true;
     }
 
-    bool FlexRayConfig::ParseECU(const rapidjson::Value &json, ECU &ecu) {
+    bool FlexRayConfig::ParseChannel(const rapidjson::Value &json, Channel &chn) {
         if (!json.IsObject()) {
-            errorString = "ECU is not an object";
+            errorString = "Channel is not an object";
             return false;
         }
 
         if (!json.HasMember("Name") || !json["Name"].IsString()) {
-            errorString = "Missing or invalid ECU Name";
+            errorString = "Missing or invalid Channel Name";
             return false;
         }
-        ecu.Name = json["Name"].GetString();
+        chn.Name = json["Name"].GetString();
 
         if (!json.HasMember("ID") || !json["ID"].IsInt()) {
-            errorString = "Missing or invalid ECU ID";
+            errorString = "Missing or invalid Channel ID";
             return false;
         }
-        ecu.ID = json["ID"].GetInt();
+        chn.ID = json["ID"].GetInt();
 
         if (!json.HasMember("UseDefault") || !json["UseDefault"].IsBool()) {
-            errorString = "Missing or invalid ECU Use Default";
+            errorString = "Missing or invalid Channel Use Default";
             return false;
         }
-        ecu.UseDefault = json["UseDefault"].GetBool();
+        chn.UseDefault = json["UseDefault"].GetBool();
 
         if (!json.HasMember("UseMaxMin") || !json["UseMaxMin"].IsBool()) {
-            errorString = "Missing or invalid ECU Use Max or Min";
+            errorString = "Missing or invalid Channel Use Max or Min";
             return false;
         }
-        ecu.UseMaxMin = json["UseMaxMin"].GetBool();
+        chn.UseMaxMin = json["UseMaxMin"].GetBool();
 
         if (!json.HasMember("BridgePattern") || !json["BridgePattern"].IsBool()) {
-            errorString = "Missing or invalid ECU Bridge Pattern";
+            errorString = "Missing or invalid Channel Bridge Pattern";
             return false;
         }
-        ecu.BridgePattern = json["BridgePattern"].GetBool();
+        chn.BridgePattern = json["BridgePattern"].GetBool();
 
         if (!json.HasMember("Termination") || !json["Termination"].IsBool()) {
-            errorString = "Missing or invalid ECU Termination";
+            errorString = "Missing or invalid Channel Termination";
             return false;
         }
-        ecu.Termination = json["Termination"].GetBool();
+        chn.Termination = json["Termination"].GetBool();
 
         if (!json.HasMember("HardwareTiming") || !json["HardwareTiming"].IsBool()) {
-            errorString = "Missing or invalid ECU Hardware Timing";
+            errorString = "Missing or invalid Channel Hardware Timing";
             return false;
         }
-        ecu.HardwareTiming = json["HardwareTiming"].GetBool();
+        chn.HardwareTiming = json["HardwareTiming"].GetBool();
 
 
         if (!json.HasMember("Description") || !json["Description"].IsString()) {
-            errorString = "Missing or invalid ECU Description";
+            errorString = "Missing or invalid Channel Description";
             return false;
         }
-        ecu.Description = json["Description"].GetString();
+        chn.Description = json["Description"].GetString();
 
         if (!json.HasMember("WatchDog") || !json["WatchDog"].IsString()) {
-            errorString = "Missing or invalid ECU WatchDog";
+            errorString = "Missing or invalid Channel WatchDog";
             return false;
         }
-        ecu.WatchDog = json["WatchDog"].GetString();
+        chn.WatchDog = json["WatchDog"].GetString();
 
         if (!json.HasMember("Frames") || !json["Frames"].IsArray()) {
             errorString = "Missing or invalid Frames";
@@ -477,167 +477,167 @@ namespace FlexRay {
                 errorString += "Failed to parse message";
                 return false;
             }
-            ecu.Frames.push_back(message);
+            chn.Frames.push_back(message);
         }
 
         return true;
     }
 
-    bool FlexRayConfig::ParseECUConfig(const rapidjson::Value &json, ECUConfig &ecuConfig) {
-        if (!json.IsObject()) {
-            errorString = "ECUConfig is not an object";
+    bool FlexRayConfig::ParseChannelConfig(const rapidjson::Value &jsonStr, ChannelConfig &chnConfig) {
+        if (!jsonStr.IsObject()) {
+            errorString = "ChannelConfig is not an object";
             return false;
         }
 
-        if (!json.HasMember("StartUpSync") || !json["StartUpSync"].IsUint()) {
-            errorString = "Missing or invalid ECU Config StartUpSync";
+        if (!jsonStr.HasMember("StartUpSync") || !jsonStr["StartUpSync"].IsUint()) {
+            errorString = "Missing or invalid Channel Config StartUpSync";
             return false;
         }
-        ecuConfig.StartUpSync = json["StartUpSync"].GetUint();
+        chnConfig.StartUpSync = jsonStr["StartUpSync"].GetUint();
 
-        if (!json.HasMember("MaxDynamicPayloadLength") || !json["MaxDynamicPayloadLength"].IsUint()) {
-            errorString = "Missing or invalid ECU Config MaxDynamicPayloadLength";
+        if (!jsonStr.HasMember("MaxDynamicPayloadLength") || !jsonStr["MaxDynamicPayloadLength"].IsUint()) {
+            errorString = "Missing or invalid Channel Config MaxDynamicPayloadLength";
             return false;
         }
-        ecuConfig.MaxDynamicPayloadLength = json["MaxDynamicPayloadLength"].GetUint();
+        chnConfig.MaxDynamicPayloadLength = jsonStr["MaxDynamicPayloadLength"].GetUint();
 
-        if (!json.HasMember("ClusterDriftDamping") || !json["ClusterDriftDamping"].IsUint()) {
-            errorString = "Missing or invalid ECU Config ClusterDriftDamping";
+        if (!jsonStr.HasMember("ClusterDriftDamping") || !jsonStr["ClusterDriftDamping"].IsUint()) {
+            errorString = "Missing or invalid Channel Config ClusterDriftDamping";
             return false;
         }
-        ecuConfig.ClusterDriftDamping = json["ClusterDriftDamping"].GetUint();
+        chnConfig.ClusterDriftDamping = jsonStr["ClusterDriftDamping"].GetUint();
 
-        if (!json.HasMember("DecodingCorrection") || !json["DecodingCorrection"].IsUint()) {
-            errorString = "Missing or invalid ECU Config DecodingCorrection";
+        if (!jsonStr.HasMember("DecodingCorrection") || !jsonStr["DecodingCorrection"].IsUint()) {
+            errorString = "Missing or invalid Channel Config DecodingCorrection";
             return false;
         }
-        ecuConfig.DecodingCorrection = json["DecodingCorrection"].GetUint();
+        chnConfig.DecodingCorrection = jsonStr["DecodingCorrection"].GetUint();
 
-        if (!json.HasMember("ListenTimeout") || !json["ListenTimeout"].IsUint()) {
-            errorString = "Missing or invalid ECU Config ListenTimeout";
+        if (!jsonStr.HasMember("ListenTimeout") || !jsonStr["ListenTimeout"].IsUint()) {
+            errorString = "Missing or invalid Channel Config ListenTimeout";
             return false;
         }
-        ecuConfig.ListenTimeout = json["ListenTimeout"].GetUint();
+        chnConfig.ListenTimeout = jsonStr["ListenTimeout"].GetUint();
 
-        if (!json.HasMember("MaxDrift") || !json["MaxDrift"].IsUint()) {
-            errorString = "Missing or invalid ECU Config MaxDrift";
+        if (!jsonStr.HasMember("MaxDrift") || !jsonStr["MaxDrift"].IsUint()) {
+            errorString = "Missing or invalid Channel Config MaxDrift";
             return false;
         }
-        ecuConfig.MaxDrift = json["MaxDrift"].GetUint();
+        chnConfig.MaxDrift = jsonStr["MaxDrift"].GetUint();
 
-        if (!json.HasMember("ExternOffsetCorrection") || !json["ExternOffsetCorrection"].IsUint()) {
-            errorString = "Missing or invalid ECU Config ExternOffsetCorrection";
+        if (!jsonStr.HasMember("ExternOffsetCorrection") || !jsonStr["ExternOffsetCorrection"].IsUint()) {
+            errorString = "Missing or invalid Channel Config ExternOffsetCorrection";
             return false;
         }
-        ecuConfig.ExternOffsetCorrection = json["ExternOffsetCorrection"].GetUint();
+        chnConfig.ExternOffsetCorrection = jsonStr["ExternOffsetCorrection"].GetUint();
 
-        if (!json.HasMember("ExternRateCorrection") || !json["ExternRateCorrection"].IsUint()) {
-            errorString = "Missing or invalid ECU Config ExternRateCorrection";
+        if (!jsonStr.HasMember("ExternRateCorrection") || !jsonStr["ExternRateCorrection"].IsUint()) {
+            errorString = "Missing or invalid Channel Config ExternRateCorrection";
             return false;
         }
-        ecuConfig.ExternRateCorrection = json["ExternRateCorrection"].GetUint();
+        chnConfig.ExternRateCorrection = jsonStr["ExternRateCorrection"].GetUint();
 
-        if (!json.HasMember("LatestTX") || !json["LatestTX"].IsUint()) {
-            errorString = "Missing or invalid ECU Config LatestTX";
+        if (!jsonStr.HasMember("LatestTX") || !jsonStr["LatestTX"].IsUint()) {
+            errorString = "Missing or invalid Channel Config LatestTX";
             return false;
         }
-        ecuConfig.LatestTX = json["LatestTX"].GetUint();
+        chnConfig.LatestTX = jsonStr["LatestTX"].GetUint();
 
-        if (!json.HasMember("MicroPerCycle") || !json["MicroPerCycle"].IsUint()) {
-            errorString = "Missing or invalid ECU Config MicroPerCycle";
+        if (!jsonStr.HasMember("MicroPerCycle") || !jsonStr["MicroPerCycle"].IsUint()) {
+            errorString = "Missing or invalid Channel Config MicroPerCycle";
             return false;
         }
-        ecuConfig.MicroPerCycle = json["MicroPerCycle"].GetUint();
+        chnConfig.MicroPerCycle = jsonStr["MicroPerCycle"].GetUint();
 
-        if (!json.HasMember("OffsetCorrectionOut") || !json["OffsetCorrectionOut"].IsUint()) {
-            errorString = "Missing or invalid ECU Config OffsetCorrectionOut";
+        if (!jsonStr.HasMember("OffsetCorrectionOut") || !jsonStr["OffsetCorrectionOut"].IsUint()) {
+            errorString = "Missing or invalid Channel Config OffsetCorrectionOut";
             return false;
         }
-        ecuConfig.OffsetCorrectionOut = json["OffsetCorrectionOut"].GetUint();
+        chnConfig.OffsetCorrectionOut = jsonStr["OffsetCorrectionOut"].GetUint();
 
-        if (!json.HasMember("RateCorrectionOut") || !json["RateCorrectionOut"].IsUint()) {
-            errorString = "Missing or invalid ECU RateCorrectionOut";
+        if (!jsonStr.HasMember("RateCorrectionOut") || !jsonStr["RateCorrectionOut"].IsUint()) {
+            errorString = "Missing or invalid Channel RateCorrectionOut";
             return false;
         }
-        ecuConfig.RateCorrectionOut = json["RateCorrectionOut"].GetUint();
+        chnConfig.RateCorrectionOut = jsonStr["RateCorrectionOut"].GetUint();
 
-        if (!json.HasMember("SamplesPerMicroTick") || !json["SamplesPerMicroTick"].IsUint()) {
-            errorString = "Missing or invalid ECU SamplesPerMicroTick";
+        if (!jsonStr.HasMember("SamplesPerMicroTick") || !jsonStr["SamplesPerMicroTick"].IsUint()) {
+            errorString = "Missing or invalid Channel SamplesPerMicroTick";
             return false;
         }
-        ecuConfig.SamplesPerMicroTick = json["SamplesPerMicroTick"].GetUint();
+        chnConfig.SamplesPerMicroTick = jsonStr["SamplesPerMicroTick"].GetUint();
 
-        if (!json.HasMember("DelayCompensationA") || !json["DelayCompensationA"].IsUint()) {
-            errorString = "Missing or invalid ECU DelayCompensationA";
+        if (!jsonStr.HasMember("DelayCompensationA") || !jsonStr["DelayCompensationA"].IsUint()) {
+            errorString = "Missing or invalid Channel DelayCompensationA";
             return false;
         }
-        ecuConfig.DelayCompensationA = json["DelayCompensationA"].GetUint();
+        chnConfig.DelayCompensationA = jsonStr["DelayCompensationA"].GetUint();
 
-        if (!json.HasMember("DelayCompensationB") || !json["DelayCompensationB"].IsUint()) {
-            errorString = "Missing or invalid ECU DelayCompensationB";
+        if (!jsonStr.HasMember("DelayCompensationB") || !jsonStr["DelayCompensationB"].IsUint()) {
+            errorString = "Missing or invalid Channel DelayCompensationB";
             return false;
         }
-        ecuConfig.DelayCompensationB = json["DelayCompensationB"].GetUint();
+        chnConfig.DelayCompensationB = jsonStr["DelayCompensationB"].GetUint();
 
-        if (!json.HasMember("WakeUpPattern") || !json["WakeUpPattern"].IsUint()) {
-            errorString = "Missing or invalid ECU Config WakeUpPattern";
+        if (!jsonStr.HasMember("WakeUpPattern") || !jsonStr["WakeUpPattern"].IsUint()) {
+            errorString = "Missing or invalid Channel Config WakeUpPattern";
             return false;
         }
-        ecuConfig.WakeUpPattern = json["WakeUpPattern"].GetUint();
+        chnConfig.WakeUpPattern = jsonStr["WakeUpPattern"].GetUint();
 
-        if (!json.HasMember("AllowHaltDueToClock") || !json["AllowHaltDueToClock"].IsUint()) {
-            errorString = "Missing or invalid ECU Config AllowHaltDueToClock";
+        if (!jsonStr.HasMember("AllowHaltDueToClock") || !jsonStr["AllowHaltDueToClock"].IsUint()) {
+            errorString = "Missing or invalid Channel Config AllowHaltDueToClock";
             return false;
         }
-        ecuConfig.AllowHaltDueToClock = json["AllowHaltDueToClock"].GetUint();
+        chnConfig.AllowHaltDueToClock = jsonStr["AllowHaltDueToClock"].GetUint();
 
-        if (!json.HasMember("AllowPassiveToAction") || !json["AllowPassiveToAction"].IsUint()) {
-            errorString = "Missing or invalid ECU Config AllowPassiveToAction";
+        if (!jsonStr.HasMember("AllowPassiveToAction") || !jsonStr["AllowPassiveToAction"].IsUint()) {
+            errorString = "Missing or invalid Channel Config AllowPassiveToAction";
             return false;
         }
-        ecuConfig.AllowPassiveToAction = json["AllowPassiveToAction"].GetUint();
+        chnConfig.AllowPassiveToAction = jsonStr["AllowPassiveToAction"].GetUint();
 
-        if (!json.HasMember("AcceptedStartUpRange") || !json["AcceptedStartUpRange"].IsUint()) {
-            errorString = "Missing or invalid ECU Config AcceptedStartUpRange";
+        if (!jsonStr.HasMember("AcceptedStartUpRange") || !jsonStr["AcceptedStartUpRange"].IsUint()) {
+            errorString = "Missing or invalid Channel Config AcceptedStartUpRange";
             return false;
         }
-        ecuConfig.AcceptedStartUpRange = json["AcceptedStartUpRange"].GetUint();
+        chnConfig.AcceptedStartUpRange = jsonStr["AcceptedStartUpRange"].GetUint();
 
-        if (!json.HasMember("MacroInitialOffsetA") || !json["MacroInitialOffsetA"].IsUint()) {
-            errorString = "Missing or invalid ECU Config MacroInitialOffsetA";
+        if (!jsonStr.HasMember("MacroInitialOffsetA") || !jsonStr["MacroInitialOffsetA"].IsUint()) {
+            errorString = "Missing or invalid Channel Config MacroInitialOffsetA";
             return false;
         }
-        ecuConfig.MacroInitialOffsetA = json["MacroInitialOffsetA"].GetUint();
+        chnConfig.MacroInitialOffsetA = jsonStr["MacroInitialOffsetA"].GetUint();
 
-        if (!json.HasMember("MacroInitialOffsetB") || !json["MacroInitialOffsetB"].IsUint()) {
-            errorString = "Missing or invalid ECU Config MacroInitialOffsetB";
+        if (!jsonStr.HasMember("MacroInitialOffsetB") || !jsonStr["MacroInitialOffsetB"].IsUint()) {
+            errorString = "Missing or invalid Channel Config MacroInitialOffsetB";
             return false;
         }
-        ecuConfig.MacroInitialOffsetB = json["MacroInitialOffsetB"].GetUint();
+        chnConfig.MacroInitialOffsetB = jsonStr["MacroInitialOffsetB"].GetUint();
 
-        if (!json.HasMember("MicroInitialOffsetA") || !json["MicroInitialOffsetA"].IsUint()) {
-            errorString = "Missing or invalid ECU Config MicroInitialOffsetA";
+        if (!jsonStr.HasMember("MicroInitialOffsetA") || !jsonStr["MicroInitialOffsetA"].IsUint()) {
+            errorString = "Missing or invalid Channel Config MicroInitialOffsetA";
             return false;
         }
-        ecuConfig.MicroInitialOffsetA = json["MicroInitialOffsetA"].GetUint();
+        chnConfig.MicroInitialOffsetA = jsonStr["MicroInitialOffsetA"].GetUint();
 
-        if (!json.HasMember("MircoInitialOffsetB") || !json["MircoInitialOffsetB"].IsUint()) {
-            errorString = "Missing or invalid ECU Config MircoInitialOffsetB";
+        if (!jsonStr.HasMember("MircoInitialOffsetB") || !jsonStr["MircoInitialOffsetB"].IsUint()) {
+            errorString = "Missing or invalid Channel Config MircoInitialOffsetB";
             return false;
         }
-        ecuConfig.MircoInitialOffsetB = json["MircoInitialOffsetB"].GetUint();
+        chnConfig.MircoInitialOffsetB = jsonStr["MircoInitialOffsetB"].GetUint();
 
-        if (!json.HasMember("SingleSlotEnabled") || !json["SingleSlotEnabled"].IsUint()) {
-            errorString = "Missing or invalid ECU Config SingleSlotEnabled";
+        if (!jsonStr.HasMember("SingleSlotEnabled") || !jsonStr["SingleSlotEnabled"].IsUint()) {
+            errorString = "Missing or invalid Channel Config SingleSlotEnabled";
             return false;
         }
-        ecuConfig.SingleSlotEnabled = json["SingleSlotEnabled"].GetUint();
+        chnConfig.SingleSlotEnabled = jsonStr["SingleSlotEnabled"].GetUint();
 
-        if (!json.HasMember("MicroTick") || !json["MicroTick"].IsDouble()) {
-            errorString = "Missing or invalid ECU Config MicroTick";
+        if (!jsonStr.HasMember("MicroTick") || !jsonStr["MicroTick"].IsDouble()) {
+            errorString = "Missing or invalid Channel Config MicroTick";
             return false;
         }
-        ecuConfig.MicroTick = json["MicroTick"].GetDouble();
+        chnConfig.MicroTick = jsonStr["MicroTick"].GetDouble();
 
         return true;
     }

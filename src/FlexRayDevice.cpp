@@ -10,7 +10,7 @@ namespace FlexRay{
         auto parseErrorString = deviceConfig->GetErrorString();
         if(!parseErrorString.empty())
             msg_log_error("Device parse error: " + parseErrorString, deviceName);
-        auto &chn = deviceConfig->GetDataPtr()->Config.Ecu;
+        auto &chn = deviceConfig->GetDataPtr()->Config.Chn;
 
         //get path
         char lib[200]{};
@@ -24,7 +24,7 @@ namespace FlexRay{
         wd_create(chn.WatchDog.data(), 0, &wdPtr);
 
         //device channel index
-        channelPtr = std::make_shared<FlexRayChannel>(con, deviceConfig->GetDataPtr()->Config.Ecu.Name.data(), &deviceConfig->GetDataPtr()->Config.ClusterConfig, &deviceConfig->GetDataPtr()->Config.Ecu);
+        channelPtr = std::make_shared<FlexRayChannel>(con, deviceConfig->GetDataPtr()->Config.Chn.Name.data(), &deviceConfig->GetDataPtr()->Config.ClusterConfig, &deviceConfig->GetDataPtr()->Config.Chn);
     }
 
     FlexRayDevice::~FlexRayDevice(){
@@ -51,20 +51,20 @@ namespace FlexRay{
             //close
             auto devName = deviceConfig->GetDataPtr()->Config.FlexRay.data();
             auto clusterConfig = &deviceConfig->GetDataPtr()->Config.ClusterConfig;
-            auto ecuPtr = &deviceConfig->GetDataPtr()->Config.Ecu;
+            auto ecuPtr = &deviceConfig->GetDataPtr()->Config.Chn;
             channelPtr = std::make_shared<FlexRayChannel>(con, devName, clusterConfig, ecuPtr);
         }
     }
 
     void FlexRayDevice::GetVariables(std::string &vars, std::string &des) const {
         //watchdog
-        auto watchdogName = deviceConfig->GetDataPtr()->Config.Ecu.WatchDog;
+        auto watchdogName = deviceConfig->GetDataPtr()->Config.Chn.WatchDog;
         if(!watchdogName.empty()) {
             vars += watchdogName + ',';
             des += watchdogName + ',';
         }
         //signal
-        for(const auto &msg : deviceConfig->GetDataPtr()->Config.Ecu.Frames)
+        for(const auto &msg : deviceConfig->GetDataPtr()->Config.Chn.Frames)
             for(const auto &sign : msg.Signals){
                 if(!sign.Variable.empty()) {
                     vars += sign.Variable + ',';

@@ -63,7 +63,7 @@ struct ClusterConfig{
     double OffsetCorrectionMax;
 };
 
-struct ECUConfig{
+struct ChannelConfig{
     uint8_t StartUpSync;
     uint8_t MaxDynamicPayloadLength;
     uint8_t ClusterDriftDamping;
@@ -95,7 +95,7 @@ FLEXRAYDLL int32_t FindAllChannels(char *str, int32_t *chnCount);
 
 FLEXRAYDLL int32_t GetErrorCode(char* error, int32_t *eventNum);
 
-FLEXRAYDLL int32_t SetChannel(void **channel, char *device, uint16_t *channelConfig, ClusterConfig *clusterConfig, ECUConfig *ecuConfig);
+FLEXRAYDLL int32_t SetChannel(void **channel, char *device, uint16_t *channelConfig, ClusterConfig *clusterConfig, ChannelConfig *ecuConfig);
 
 FLEXRAYDLL int32_t OpenChannel(void *channel);
 

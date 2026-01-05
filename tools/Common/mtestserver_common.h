@@ -39,7 +39,7 @@ extern "C"
 //Check null pointer and returns a handle error
 #define CHECK_HANDLE(x) if(x == nullptr) return DEVICE_HANDLE_ERROR
 
-//ECU List
+//Channel List
 
 /**
  * Clear all EcuList
@@ -49,7 +49,7 @@ MTEST_API void channel_list_clear();
 /**
  * Add a list of channels with a specified name
  * @param name The name of the channel list cannot be repeated, and if it is repeated, the previous one will be replaced
- * @param channel_list ECU list, split by line breaks, one channel for every 7 fields,
+ * @param channel_list Channel list, split by line breaks, one channel for every 7 fields,
  * The first field is the statistical type, the second field is the channel name, the third field is the variable name,
  * the fourth field is the variable type, the fifth field is the variable unit, the sixth field is the channel type, and the seventh field is the channel description
  * @return Whether to add success 0 - succeeded, 1 - already existed and replaced, other failed
@@ -59,7 +59,7 @@ MTEST_API int channel_list_add(const char *name, const char *channel_list);
 /**
  * Gets a list of channels with a specified name
  * @param name The name of the list of channels to get
- * @param channel_list ECU list, split by line breaks, one channel for every 7 fields,
+ * @param channel_list Channel list, split by line breaks, one channel for every 7 fields,
  * The first field is the statistical type, the second field is the channel name, the third field is the variable name,
  * the fourth field is the variable type, the fifth field is the variable unit, the sixth field is the channel type, and the seventh field is the channel description
  * @param channel_list_size The size of the channel list, and when the buffer size is insufficient, the size of the buffer is returned

@@ -65,7 +65,7 @@ namespace FlexRay {
             std::vector<Signal> Signals;
         };
 
-        struct ECU {
+        struct Channel {
             std::string Name;
             uint16_t ID;
             bool UseDefault;
@@ -73,7 +73,7 @@ namespace FlexRay {
             bool BridgePattern;
             bool Termination;
             bool HardwareTiming;
-            ECUConfig EcuConfig;
+            ChannelConfig EcuConfig;
             std::string Description;
             std::string WatchDog;
             std::vector<Frame> Frames;
@@ -83,8 +83,8 @@ namespace FlexRay {
             std::string FlexRay;
             std::string SerialNumber;
             ClusterConfig ClusterConfig;
-//            std::vector<ECU> EcuList;
-            ECU Ecu;
+//            std::vector<Channel> ChannelList;
+            Channel Chn;
         };
 
         struct DeviceData {
@@ -111,9 +111,9 @@ namespace FlexRay {
 
         bool ParseDeviceInfo(const rapidjson::Value &jsonStr, DeviceInfo &info);
 
-        bool ParseECU(const rapidjson::Value &json, ECU &ecu);
+        bool ParseChannel(const rapidjson::Value &json, Channel &chn);
 
-        bool ParseECUConfig(const rapidjson::Value &jsonStr, ECUConfig &ecuConfig);
+        bool ParseChannelConfig(const rapidjson::Value &jsonStr, ChannelConfig &chnConfig);
 
         bool ParseFrame(const rapidjson::Value &json, Frame &message);
 

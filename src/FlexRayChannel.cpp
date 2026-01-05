@@ -29,7 +29,7 @@ namespace FlexRay {
         return res;
     }
 
-    FlexRayChannel::FlexRayChannel(void *con, char *deviceString, ClusterConfig *clusterConfig, FlexRayConfig::ECU *ecuConfig) : con(con), channelConfig(ecuConfig) {
+    FlexRayChannel::FlexRayChannel(void *con, char *deviceString, ClusterConfig *clusterConfig, FlexRayConfig::Channel *ecuConfig) : con(con), channelConfig(ecuConfig) {
         auto &frames = ecuConfig->Frames;
         std::vector<uint16_t> frameConfig;
         frameConfig.emplace_back(0);
