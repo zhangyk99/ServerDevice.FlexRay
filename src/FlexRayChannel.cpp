@@ -61,10 +61,10 @@ namespace FlexRay {
             }
         }
 
-        auto res = SetChannel(&channelPtr, deviceString, frameConfig.data(), clusterConfig, &ecuConfig->EcuConfig);
+        auto res = fr_set_channel_config(&channelPtr, deviceString, frameConfig.data(), clusterConfig, &ecuConfig->EcuConfig);
         if (!res)
             errorCode = -5001;
-        res = OpenChannel(channelPtr);
+        res = fr_open_channel(channelPtr);
         if (!res)
             errorCode = -5002;
     }
@@ -74,7 +74,7 @@ namespace FlexRay {
             free_signal_decoder(ptr);
         for(auto &ptr : rxDecodePtr)
             free_signal_decoder(ptr);
-        CloseChannel(channelPtr);
+        fr_close_channel(channelPtr);
     }
 
     int32_t FlexRayChannel::SendMessage() {
@@ -86,7 +86,7 @@ namespace FlexRay {
             if(!(timePos%txTerm[i])){
                 //encode
                 signal_decoder(txDecodePtr[i], data, txFrames[i].dataLength);
-                if(SetMessage(channelPtr, txFrames[i].slot, txFrames[i].cycle, txFrames[i].dataLength, data, 100))
+                if(fr_set_message(channelPtr, txFrames[i].slot, txFrames[i].cycle, txFrames[i].dataLength, data, 100))
                     return -1;
             }
         }
@@ -100,7 +100,7 @@ namespace FlexRay {
         uint8_t dataLength[100];
         uint8_t data[25400]{};
 
-        if(GetMessages(channelPtr, &item, slot, cycle, dataLength, data, 100))
+        if(fr_get_messages(channelPtr, &item, slot, cycle, dataLength, data, 100))
             return -1;
 
         for(uint32_t i = 0; i < item; i++){

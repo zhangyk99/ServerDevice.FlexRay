@@ -483,9 +483,9 @@ namespace FlexRay {
         return true;
     }
 
-    bool FlexRayConfig::ParseChannelConfig(const rapidjson::Value &jsonStr, ChannelConfig &chnConfig) {
+    bool FlexRayConfig::ParseChannelConfig(const rapidjson::Value &jsonStr, ECUConfig &chnConfig) {
         if (!jsonStr.IsObject()) {
-            errorString = "ChannelConfig is not an object";
+            errorString = "ECUConfig is not an object";
             return false;
         }
 
@@ -627,11 +627,11 @@ namespace FlexRay {
         }
         chnConfig.MircoInitialOffsetB = jsonStr["MircoInitialOffsetB"].GetUint();
 
-        if (!jsonStr.HasMember("SingleSlotEnabled") || !jsonStr["SingleSlotEnabled"].IsUint()) {
-            errorString = "Missing or invalid Channel Config SingleSlotEnabled";
-            return false;
-        }
-        chnConfig.SingleSlotEnabled = jsonStr["SingleSlotEnabled"].GetUint();
+//        if (!jsonStr.HasMember("SingleSlotEnabled") || !jsonStr["SingleSlotEnabled"].IsUint()) {
+//            errorString = "Missing or invalid Channel Config SingleSlotEnabled";
+//            return false;
+//        }
+//        chnConfig.SingleSlotEnabled = jsonStr["SingleSlotEnabled"].GetUint();
 
         if (!jsonStr.HasMember("MicroTick") || !jsonStr["MicroTick"].IsDouble()) {
             errorString = "Missing or invalid Channel Config MicroTick";

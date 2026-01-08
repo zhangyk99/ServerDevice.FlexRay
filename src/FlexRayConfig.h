@@ -73,7 +73,7 @@ namespace FlexRay {
             bool BridgePattern;
             bool Termination;
             bool HardwareTiming;
-            ChannelConfig EcuConfig;
+            ECUConfig EcuConfig;
             std::string Description;
             std::string WatchDog;
             std::vector<Frame> Frames;
@@ -113,7 +113,7 @@ namespace FlexRay {
 
         bool ParseChannel(const rapidjson::Value &json, Channel &chn);
 
-        bool ParseChannelConfig(const rapidjson::Value &jsonStr, ChannelConfig &chnConfig);
+        bool ParseChannelConfig(const rapidjson::Value &jsonStr, ECUConfig &chnConfig);
 
         bool ParseFrame(const rapidjson::Value &json, Frame &message);
 

@@ -28,10 +28,14 @@ else ()
     add_library(MTestServer.Device.FlexRay SHARED mtestserver_device_flexray.cpp ${SRC_FILES})
 endif ()
 
+add_subdirectory(tests)
+
 target_include_directories(MTestServer.Device.FlexRay PRIVATE "./src")
 
-target_link_libraries(MTestServer.Device.FlexRay PRIVATE
-        serverlogger MTestServer.Watchdog MTestServer.Common
-)
+target_link_libraries(MTestServer.Device.FlexRay PRIVATE serverlogger MTestServer.Watchdog MTestServer.Common)
+
+
+#add_executable(test test.cpp)
+#target_include_directories(test PRIVATE "./src")
 
 #add_subdirectory(test)
