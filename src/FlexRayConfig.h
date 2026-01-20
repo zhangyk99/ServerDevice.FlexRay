@@ -35,31 +35,39 @@ namespace FlexRay {
             std::string Name;
             std::string Variable;
             std::string Unit;
-            int8_t Gain;
-            int8_t Offset;
-            int8_t StartBit;
-            int8_t NumBits;
+            double Gain;
+            double Offset;
+            int StartBit;
+            int NumBits;
             double DefaultValue;
             double MaxValue;
             double MinValue;
-            bool ByteOrder;
-            int8_t DataType;
-            int8_t SignalType;
-            int8_t ModeValue;
+            int ByteOrder;
+            int DataType;
+            int SignalType;
+            int ModeValue;
             std::string Comment;
         };
 
         struct Frame {
-            uint16_t ID;
+            uint8_t ID;                                 // channel index starting from 0
             std::string Name;
-            bool TxOrRx;    // true: transform  false: receive
+            bool TxOrRx;                                 // true: transform  false: receive
             uint16_t Frequency;
-            uint8_t Type;
-            uint16_t Sold;
+            uint8_t Type;                                //0 = raw flexray frame, 1 = error event, 2 = status, 3 = start cycle
+            uint16_t Sold;                               // static seg: 0~1023
             uint8_t CycleRepetition;
             uint8_t BaseCycle;
             uint8_t InCycleRepetition;
             uint8_t Config;
+            //                                            # bit0: enanle A
+            //                                            # bit1: enanle B
+            //                                            # bit2: is NM msg
+            //                                            # bit3: 0 :cycle ，1:Single trigger
+            //                                            # bit4: Whether it is a cold start message, only buffer 0 can be set to 1
+            //                                            # bit5: Whether it is a synchronization message, only the buffer 0/1 can be set to 1
+            //                                            # bit6:
+            //                                            # bit7: 0 - static，1 - Dynamic
             uint8_t PayloadLength;
             std::string Description;
             std::vector<Signal> Signals;
