@@ -666,23 +666,23 @@ namespace FlexRay {
         }
         message.TxOrRx = json["TxOrRx"].GetBool();
 
-        if (!json.HasMember("Frequency") || !json["Frequency"].IsUint()) {
-            errorString = "Missing or invalid is Frame Frequency";
-            return false;
-        }
-        message.Frequency = json["Frequency"].GetUint();
+//        if (!json.HasMember("Frequency") || !json["Frequency"].IsUint()) {
+//            errorString = "Missing or invalid is Frame Frequency";
+//            return false;
+//        }
+//        message.Frequency = json["Frequency"].GetUint();
+//
+//        if (!json.HasMember("Type") || !json["Type"].IsUint()) {
+//            errorString = "Missing or invalid is Frame Type";
+//            return false;
+//        }
+//        message.Type = json["Type"].GetUint();
 
-        if (!json.HasMember("Type") || !json["Type"].IsUint()) {
-            errorString = "Missing or invalid is Frame Type";
+        if (!json.HasMember("SlotID") || !json["SlotID"].IsUint()) {
+            errorString = "Missing or invalid is Frame SlotID";
             return false;
         }
-        message.Type = json["Type"].GetUint();
-
-        if (!json.HasMember("Sold") || !json["Sold"].IsUint()) {
-            errorString = "Missing or invalid is Frame Sold";
-            return false;
-        }
-        message.Sold = json["Sold"].GetUint();
+        message.SlotID = json["SlotID"].GetUint();
 
         if (!json.HasMember("CycleRepetition") || !json["CycleRepetition"].IsUint()) {
             errorString = "Missing or invalid is Frame Cycle Repetition";

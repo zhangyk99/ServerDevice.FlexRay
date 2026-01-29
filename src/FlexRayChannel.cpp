@@ -29,8 +29,8 @@ namespace FlexRay {
         return res;
     }
 
-    FlexRayChannel::FlexRayChannel(void *con, char *deviceString, ClusterConfig *clusterConfig, FlexRayConfig::Channel *ecuConfig) : con(con), channelConfig(ecuConfig) {
-        auto &frames = ecuConfig->Frames;
+    FlexRayChannel::FlexRayChannel(void *con, char *deviceString, ClusterConfig *clusterConfig, FlexRayConfig::Channel *chnConfig) : con(con), channelConfig(chnConfig) {
+        auto &frames = chnConfig->Frames;
         std::vector<uint16_t> frameConfig;
         frameConfig.emplace_back(0);
         //set channel param;
@@ -38,9 +38,14 @@ namespace FlexRay {
         std::string rxName{};
         for(auto &f : frames){
             if(f.TxOrRx) {
-                txFrames.emplace_back(f.Sold, f.CycleRepetition + f.BaseCycle, f.PayloadLength, f.Signals);
-                txTerm.emplace_back(1000/f.Frequency);
-                frameConfig.emplace_back(f.Sold);
+                auto cycle = f.BaseCycle;
+                while(cycle < 64){
+                    sendList[cycle].insert(f.SlotID);
+                    cycle += f.CycleRepetition;
+                }
+                txFrames.emplace(f.SlotID, FrameData(f.SlotID, f.CycleRepetition + f.BaseCycle, f.PayloadLength, f.Signals));
+//                txTerm.emplace_back(1000/f.Frequency);
+                frameConfig.emplace_back(f.SlotID);
                 frameConfig.emplace_back(f.CycleRepetition + f.BaseCycle);
                 frameConfig.emplace_back(f.Config);
                 frameConfig.emplace_back(f.PayloadLength);
@@ -49,19 +54,19 @@ namespace FlexRay {
                     txName += sign.Variable + ',';
                 txName.pop_back();
                 auto ptr = create_signal_decoder(con, txName.data(), 0, 0);
-                txDecodePtr.push_back(ptr);
+                txDecodePtr.emplace(f.SlotID, ptr);
             } else {
-                rxFrames.emplace_back(f.Sold, f.CycleRepetition + f.BaseCycle, f.PayloadLength, f.Signals);
-                rxTerm.emplace_back(1000/f.Frequency);
+                rxFrames.emplace(f.SlotID, FrameData(f.SlotID, f.CycleRepetition + f.BaseCycle, f.PayloadLength, f.Signals));
+//                rxTerm.emplace_back(1000/f.Frequency);
                 for(auto &sign : f.Signals)
                     rxName += sign.Variable + ',';
                 rxName.pop_back();
                 auto ptr = create_signal_decoder(con, rxName.data(), 0, 0);
-                rxDecodePtr.push_back(ptr);
+                rxDecodePtr.emplace(f.SlotID, ptr);
             }
         }
 
-        auto res = fr_set_channel_config(&channelPtr, deviceString, frameConfig.data(), clusterConfig, &ecuConfig->EcuConfig);
+        auto res = fr_set_channel_config(&channelPtr, deviceString, frameConfig.data(), clusterConfig, &chnConfig->EcuConfig);
         if (!res)
             errorCode = -5001;
         res = fr_open_channel(channelPtr);
@@ -70,26 +75,34 @@ namespace FlexRay {
     }
 
     FlexRayChannel::~FlexRayChannel() {
-        for(auto &ptr : txDecodePtr)
+        for(auto &[slot, ptr] : txDecodePtr)
             free_signal_decoder(ptr);
-        for(auto &ptr : rxDecodePtr)
+        for(auto &[slot, ptr] : rxDecodePtr)
             free_signal_decoder(ptr);
         fr_close_channel(channelPtr);
     }
 
-    int32_t FlexRayChannel::SendMessage() {
+    int32_t FlexRayChannel::SendMessage_() {
         //process frames
         uint8_t data[254]{};
         double value = 0;
         uint16_t pos = 0;
-        for (uint32_t i = 0; i < txFrames.size(); i++){
-            if(!(timePos%txTerm[i])){
-                //encode
-                signal_decoder(txDecodePtr[i], data, txFrames[i].dataLength);
-                if(fr_set_message(channelPtr, txFrames[i].slot, txFrames[i].cycle, txFrames[i].dataLength, data, 100))
-                    return -1;
-            }
+        if(sendCycle == 64)
+            sendCycle = 0;
+        for(auto &it : sendList[sendCycle]) {
+            signal_decoder(txDecodePtr[it], data, txFrames.at(it).dataLength);
+            if(fr_set_message(channelPtr, txFrames.at(it).slot, txFrames.at(it).cycle, txFrames.at(it).dataLength, data, 100))
+                return -1;
         }
+
+//        for (uint32_t i = 0; i < txFrames.size(); i++){
+//            if(!(timePos%txTerm[i])){
+//                //encode
+//                signal_decoder(txDecodePtr[i], data, txFrames[i].dataLength);
+//                if(fr_set_message(channelPtr, txFrames[i].slot, txFrames[i].cycle, txFrames[i].dataLength, data, 100))
+//                    return -1;
+//            }
+//        }
         return 0;
     }
 
@@ -103,12 +116,12 @@ namespace FlexRay {
         if(fr_get_messages(channelPtr, &item, slot, cycle, dataLength, data, 100))
             return -1;
 
-        for(uint32_t i = 0; i < item; i++){
-            for(uint32_t j = 0; j < rxFrames.size(); j++){
-                if(rxFrames[j].slot == slot[i])
-                    signal_decoder(rxDecodePtr[j], rxFrames[j].data, rxFrames[j].dataLength);
-            }
-        }
+//        for(uint32_t i = 0; i < item; i++){
+//            for(uint32_t j = 0; j < rxFrames.size(); j++){
+//                if(rxFrames[j].slot == slot[i])
+//                    signal_decoder(rxDecodePtr[j], rxFrames[j].data, rxFrames[j].dataLength);
+//            }
+//        }
         return 0;
     }
 

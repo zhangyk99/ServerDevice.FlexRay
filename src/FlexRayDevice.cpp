@@ -12,6 +12,13 @@ namespace FlexRay{
             msg_log_error("Device parse error: " + parseErrorString, deviceName);
         auto &chn = deviceConfig->GetDataPtr()->Config.Chn;
 
+        std::vector<std::set<uint16_t>> sendList;
+        sendList.resize(64);
+        for(auto &it : chn.Frames)
+            for(int i = 0; i < 64; i++)
+                if(i > it.BaseCycle && (i - it.BaseCycle) % it.BaseCycle == 0)
+                    sendList[i].insert(it.SlotID);
+
         //get path
         char lib[200]{};
         char log[200]{};
@@ -24,7 +31,7 @@ namespace FlexRay{
         wd_create(chn.WatchDog.data(), 0, &wdPtr);
 
         //device channel index
-        channelPtr = std::make_shared<FlexRayChannel>(con, deviceConfig->GetDataPtr()->Config.Chn.Name.data(), &deviceConfig->GetDataPtr()->Config.ClusterConfig, &deviceConfig->GetDataPtr()->Config.Chn);
+        channelPtr = std::make_shared<FlexRayChannel>(con, deviceConfig->GetDataPtr()->Config.Chn.Name.data(), &deviceConfig->GetDataPtr()->Config.ClusterConfig, &deviceConfig->GetDataPtr()->Config.Chn, sendList);
     }
 
     FlexRayDevice::~FlexRayDevice(){
@@ -52,7 +59,14 @@ namespace FlexRay{
             auto devName = deviceConfig->GetDataPtr()->Config.FlexRay.data();
             auto clusterConfig = &deviceConfig->GetDataPtr()->Config.ClusterConfig;
             auto ecuPtr = &deviceConfig->GetDataPtr()->Config.Chn;
-            channelPtr = std::make_shared<FlexRayChannel>(con, devName, clusterConfig, ecuPtr);
+            auto &chn = deviceConfig->GetDataPtr()->Config.Chn;
+            std::vector<std::set<uint16_t>> sendList;
+            sendList.resize(64);
+            for(auto &it : chn.Frames)
+                for(int i = 0; i < 64; i++)
+                    if(i > it.BaseCycle && (i - it.BaseCycle) % it.BaseCycle == 0)
+                        sendList[i].insert(it.SlotID);
+            channelPtr = std::make_shared<FlexRayChannel>(con, devName, clusterConfig, ecuPtr, sendList);
         }
     }
 
